@@ -60,10 +60,8 @@ function controllers.printTable()
   end
 end
 
--- New SignalCraft Signals
-controllers.Singnals = component.proxy(getAddress("Signals")) -- Signals
-
--- Switches
+controllers.Signals = component.proxy(getAddress("Signals")) -- Signals
 controllers.Switches = component.proxy(getAddress("Switches")) -- Switches
+controllers.Crossings = component.proxy(getAddress("Crossings")) -- Crossings
 
 return controllers

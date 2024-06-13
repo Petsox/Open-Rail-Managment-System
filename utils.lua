@@ -57,13 +57,14 @@ utils.debugPrint = function(message)
     end
     local rawTime = json.decode(internet.request("https://worldtimeapi.org/api/timezone/Europe/Prague")())["datetime"]
     local time = string.split(rawTime, "T")[1] .. " " .. string.split(string.split(rawTime, "T")[2], ".")[1]
-    file:write(time .. "  " .. message .. "\n")
+    file:write(time .. "  " .. tostring(message) .. "\n")
     file:close()
 end
 
 -- Define connected controllers
 local switchesConnected = controllers.isConnected("Switches")
 local signalsConnected  = controllers.isConnected("Signals")
+local crossingsConnected = controllers.isConnected("Crossings")
 
 -- Function: utils.resetLayout
 -- Description: Resets the switches and signals according to the default layout
@@ -93,25 +94,45 @@ utils.toggleSwitch = function(switchName)
     end
 end
 
--- Function: utils.calcSignalTextPos
--- Description: Calculate the position of the signal text
--- Parameters: signalTbl - table containing the signal data
--- Returns: table containing the x and y position of the signal text
-utils.calcSignalTextPos = function(signalTbl)
-    local result = {}
-    local x, y = signalTbl[1], signalTbl[2]
-
-    if signalTbl[4] == "<" then
-        x = signalTbl[1] - signalTbl[3]:len() + 1
-        y = signalTbl[2] - 1
+utils.toggleCrossing = function(switchName)
+    if not crossingsConnected then return end
+    if controllers.Crossings.getAspect(switchName) == 5 then
+        controllers.Crossings.setAspect(switchName, 1)
     else
-        x = signalTbl[1] + signalTbl[3]:len() - 1
-        y = signalTbl[2] + 1
+        controllers.Crossings.setAspect(switchName, 5)
+    end
+end
+
+-- Function: utils.sendStateToExpectSig
+-- Description: Sends the state of the signal to the expect signal
+-- Parameters: signalName - the name of the signal
+--             state - the state of the signal
+utils.sendStateToExpectSig = function(signalName, state)
+    if not signalsConnected then return end
+
+    if state == "Stuj" then
+        state = "Vystraha"
+    elseif state == "PN" then
+        state = "Vystraha"
+    elseif state == "Vystraha" then
+        state = "Volno"
+    elseif state == "Volno" then
+        state = "Volno"
+    elseif string.sub(state, 1, 3) == "R40" then
+        state = "Ocek40"
+    elseif string.sub(state, 1, 3) == "R60" then
+        state = "Ocek60"
+    elseif string.sub(state, 1, 3) == "R80" then
+        state = "Ocek80"
+    elseif state.sub(state, 1, 4) == "Ocek" then
+        state = "Volno"
+    elseif state.sub(state, 1, 4) == "Opak" then
+        state = state.sub(state, 5)
+    else
+        state = "Vystraha"
     end
 
-    result["x"] = x
-    result["y"] = y
-    return result
+    controllers.Signals.setState("Pr" .. signalName, state)
 end
 
 -- Simple shallow copy of a table
