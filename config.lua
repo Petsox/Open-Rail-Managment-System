@@ -34,5 +34,8 @@ Config.Switches = {
 Config.Crossings = {
 {84, 28, "╪", "═", "P1"},
 }
+Config.Labels = {
+{80, 25, "Ahoj dementi", 0xFFFFFF}
+}
 Config.Debug = true -- Creates a log file
 return Config

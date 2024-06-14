@@ -8,7 +8,8 @@ local controllers = require("controllers")
 local thread = require("thread")
 
 -- Global tables
-SwitchTexts = {}
+local SwitchTexts = {}
+local SignalTexts = {}
 local settingsWindow = nil
 
 -- Create workspace
@@ -50,6 +51,18 @@ settBtn.eventHandler = function(workspace, object, event)
                 workspace:draw()
             end
 
+            -- Signal description toggle
+            local sigDescSetting = settingsWindow:addChild(GUI.button(3, 7, 16, 3, 0x19ED15, 0x000000, 0xED1515, 0x000000, "Signal Names"))
+            sigDescSetting.switchMode = true
+            sigDescSetting.animated = false
+            if workspace.children[SignalTexts[1]].hidden then sigDescSetting.pressed = true end
+            sigDescSetting.onTouch = function()
+                for _, sigDesc in pairs(SignalTexts) do
+                    workspace.children[sigDesc].hidden = not workspace.children[sigDesc].hidden
+                end
+                workspace:draw()
+            end
+
 
             workspace:draw()
             settingsWindow.actionButtons.close.onTouch = function()
@@ -62,7 +75,11 @@ end
 
 -- Import tracks
 for _, track in pairs(config.Tracks) do
-    workspace:addChild(GUI.text(track[1], track[2], 0xB2B2B2, text.trim(track[3]) or ""))
+    local newTrack = workspace:addChild(GUI.text(track[1], track[2], 0xB2B2B2, text.trim(track[3]) or ""))
+    local text = newTrack.text
+    if text == "⦗" or text == "⦘" or text == "︹" or text == "︺" then
+        newTrack.color = 0x0000FF
+    end
 end
 
 -- Import switches
@@ -84,8 +101,8 @@ for _, switch in pairs(config.Switches) do
     local newSwitchTbl = table.clone(switch)
     newSwitchTbl[5] = (string.lower(string.sub(switch[5], 1, 2)) == "vy" and string.sub(switch[5], 3)) or text.trim(switch[5])
     local calculatedTextPos = utils.calcSwitchTextPos(newSwitchTbl)
-    local switchText = newSwitchTbl[5]
-    table.insert(SwitchTexts, workspace:addChild(GUI.text(calculatedTextPos.x, calculatedTextPos.y, 0xFFFFFF, switchText)):indexOf())
+    local switchName = newSwitchTbl[5]
+    table.insert(SwitchTexts, workspace:addChild(GUI.text(calculatedTextPos.x, calculatedTextPos.y, 0xFFFFFF, switchName)):indexOf())
 end
 
 -- Import crossings
@@ -140,6 +157,7 @@ local function setSignalStateGUI(signal, state, signalTbl)
     signal.colors.default.text = 0xB2B2B2
     signal.colors.pressed.text = 0xB2B2B2
     ::signal::
+    if state == nil then return end
     if state == "Stuj" then
         signal.colors.default.text = 0xB2B2B2
         signal.colors.pressed.text = 0xB2B2B2
@@ -223,8 +241,16 @@ for _, signal in pairs(config.Signals) do
     setSignalStateGUI(newSignal, controllers.Signals.getState(signal[3]), signal)
 
     -- Create signal description
-    local calculatedTextPos = utils.calcSignalTextPos(signal)
-    workspace:addChild(GUI.text(calculatedTextPos.x, calculatedTextPos.y, 0xFFFFFF, signal[3]))
+    local newSigTbl = table.clone(signal)
+    newSigTbl[3] = string.sub(signal[3], 1, -3)
+    local calculatedTextPos = utils.calcSignalTextPos(newSigTbl)
+    local sigName = newSigTbl[3]
+    table.insert(SignalTexts, workspace:addChild(GUI.text(calculatedTextPos.x, calculatedTextPos.y, 0xFFFFFF, sigName)):indexOf())
+end
+
+-- Import labels
+for _, label in pairs(config.Labels) do
+    workspace:addChild(GUI.button(label[1] - (string.len(label[3]) / 2), label[2], string.len(label[3]) + 2, 1, 0x0000FF, 0xFFFFFF, 0x0000FF, 0xFFFFFF, label[3]))
 end
 
 -- Reset layout

@@ -36,16 +36,18 @@ utils.calcSignalTextPos = function(signalTbl)
     local result = {}
     local x, y = signalTbl[1], signalTbl[2]
 
-    if signalTbl[4] == "<" or signalTbl[4] == "˂" or signalTbl[4] == "˂" then
-        x = signalTbl[1] - (string.len(signalTbl[3]) + 1)
+    if signalTbl[4] == "<" or signalTbl[4] == "◀" or signalTbl[4] == "◁" then
+        x = signalTbl[1] - (string.len(signalTbl[3]) / 2)
+        if string.len(signalTbl[3]) % 2 == 0 then x = x + 1 end
         y = signalTbl[2] - 1
-    elseif signalTbl[4] == ">" or signalTbl[4] == "˃" or signalTbl[4] == "˂" then
-        x = signalTbl[1] + (string.len(signalTbl[3]) - 1)
+    elseif signalTbl[4] == ">" or signalTbl[4] == "▶" or signalTbl[4] == "▷" then
+        x = signalTbl[1] - (string.len(signalTbl[3]) / 2)
+        if string.len(signalTbl[3]) % 2 == 0 then x = x + 1 end
         y = signalTbl[2] + 1
-    elseif signalTbl[4] == "˄" or signalTbl[4] == "^" or signalTbl[4] == "˂" then
+    elseif signalTbl[4] == "^" or signalTbl[4] == "▲" or signalTbl[4] == "△" then
         x = signalTbl[1] + 1
         y = signalTbl[2]
-    elseif signalTbl[4] == "˅" or signalTbl[4] == "v" or signalTbl[4] == "˂" then
+    elseif signalTbl[4] == "V" or signalTbl[4] == "▼" or signalTbl[4] == "▽" then
         x = signalTbl[1] - string.len(signalTbl[3])
         y = signalTbl[2]
     end
