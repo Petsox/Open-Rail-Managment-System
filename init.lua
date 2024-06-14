@@ -221,6 +221,10 @@ for _, signal in pairs(config.Signals) do
         end
     end
     setSignalStateGUI(newSignal, controllers.Signals.getState(signal[3]), signal)
+
+    -- Create signal description
+    local calculatedTextPos = utils.calcSignalTextPos(signal)
+    workspace:addChild(GUI.text(calculatedTextPos.x, calculatedTextPos.y, 0xFFFFFF, signal[3]))
 end
 
 -- Reset layout
