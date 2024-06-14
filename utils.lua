@@ -28,6 +28,33 @@ utils.calcSwitchTextPos = function(switchTbl)
     return result
 end
 
+-- Function: utils.calcSignalTextPos
+-- Description: Calculate the position of the signal text
+-- Parameters: signalTbl - table containing the signal data
+-- Returns: table containing the x and y position of the signal text
+utils.calcSignalTextPos = function(signalTbl)
+    local result = {}
+    local x, y = signalTbl[1], signalTbl[2]
+
+    if signalTbl[4] == "<" or signalTbl[4] == "˂" or signalTbl[4] == "˂" then
+        x = signalTbl[1] - (string.len(signalTbl[3]) + 1)
+        y = signalTbl[2] - 1
+    elseif signalTbl[4] == ">" or signalTbl[4] == "˃" or signalTbl[4] == "˂" then
+        x = signalTbl[1] + (string.len(signalTbl[3]) - 1)
+        y = signalTbl[2] + 1
+    elseif signalTbl[4] == "˄" or signalTbl[4] == "^" or signalTbl[4] == "˂" then
+        x = signalTbl[1] + 1
+        y = signalTbl[2]
+    elseif signalTbl[4] == "˅" or signalTbl[4] == "v" or signalTbl[4] == "˂" then
+        x = signalTbl[1] - string.len(signalTbl[3])
+        y = signalTbl[2]
+    end
+
+    result["x"] = x
+    result["y"] = y
+    return result
+end
+
 -- Function: string.split
 -- Description: Splits a string by a separator
 -- Parameters: inputstr - the string to split
