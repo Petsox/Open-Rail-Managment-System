@@ -46,7 +46,7 @@ ORMS Layout Generator is available [here](https://petsox.github.io/ORMS-Layout-G
 # ORMS Demo layout
 </br>
 
-![image](https://user-images.githubusercontent.com/92917981/234370757-6332b3ea-0772-49a6-95ee-f9b95d0bb5ae.png)
+![image](https://github.com/Petsox/Open-Rail-Management-System/assets/63014892/c02e977b-5c90-49ea-98ce-b39681ebc592)
 
 </br>
 
@@ -64,4 +64,4 @@ Version 1.0 - 25.4.2023</br>
 </br>
 Current Version 2.0 - 15.6.2024</br>
 
-![image](https://user-images.githubusercontent.com/92917981/234370757-6332b3ea-0772-49a6-95ee-f9b95d0bb5ae.png)
+![image](https://github.com/Petsox/Open-Rail-Management-System/assets/63014892/c02e977b-5c90-49ea-98ce-b39681ebc592)
