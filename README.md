@@ -5,6 +5,8 @@ ORMS is a Lua Program for OpenComputers 1.7 and newer. Its main purpose is to co
 </br>
 Tested and developed on Minecraft 1.7.10
 
+This project uses the [LibGrapes](https://github.com/ApelSoftCorp/LibGrapes) library, making the [MineOS](https://github.com/IgorTimofeev/MineOS) GUI library available under OpenOS
+
 # Installation
 </br>
 Needed Mods:
