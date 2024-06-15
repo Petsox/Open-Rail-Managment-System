@@ -96,7 +96,7 @@ for _, switch in pairs(config.Switches) do
 
     -- Create switch description
     local newSwitchTbl = table.clone(switch)
-    newSwitchTbl[5] = (string.lower(string.sub(switch[5], 1, 2)) == "vy" and string.sub(switch[5], 3)) or text.trim(switch[5])
+    newSwitchTbl[5] = (string.lower(string.sub(switch[5], 1, 2)) == "vy" and string.sub(switch[5], 3, -3)) or text.trim(switch[5])
     local calculatedTextPos = utils.calcSwitchTextPos(newSwitchTbl)
     local switchName = newSwitchTbl[5]
     table.insert(SwitchTexts, workspace:addChild(GUI.text(calculatedTextPos.x, calculatedTextPos.y, 0xFFFFFF, switchName)):indexOf())
