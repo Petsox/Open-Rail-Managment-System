@@ -1,7 +1,7 @@
 local shell = require("shell")
 local fs = require("filesystem")
-local repo = "https://raw.githubusercontent.com/Petsox/Open-Rail-Management-System/dev/"
-local repoFiles = { "orms.lua", "SaS.lua", "gui.lua", "ormsLib.lua", "updater.lua", "station.lua", "S_1xSingle.lua", "S_2xDualHead.lua", "S_2xDualHead1xSingle.lua", "S_Shunt.lua", "controllers.lua", "S_Expect.lua", "S_1xDualHead1xSingle.lua" }
+local repo = "https://raw.githubusercontent.com/Petsox/Open-Rail-Management-System/new-master/"
+local repoFiles = { "init.lua", "json.lua", "config.lua", "controllers.lua", "updater.lua", "utils.lua", "grapes/Color.lua", "grapes/Event.lua", "grapes/Filesystem.lua", "grapes/GUI.lua", "grapes/Image.lua", "grapes/Keyboard.lua", "grapes/Number.lua", "grapes/Paths.lua", "grapes/Screen.lua", "grapes/Text.lua" }
 local installLoc = "/home/orms/"
 
 if not fs.isDirectory(installLoc) then
@@ -9,6 +9,10 @@ if not fs.isDirectory(installLoc) then
 end
 
 shell.setWorkingDirectory(installLoc)
+
+if not fs.isDirectory(installLoc .. "grapes") then
+  fs.makeDirectory(installLoc .. "grapes")
+end
 
 for file, _ in fs.list(installLoc) do
   print("Install location contains files within, wipe all? (Y - Yes/N - No)")
@@ -40,15 +44,28 @@ for _, file in pairs(repoFiles) do
 
     if input == "a" then
       OverwriteAll = true
-      shell.execute("wget -f " .. repo .. file)
+      shell.execute("wget -f " .. repo .. file .. " -O " .. file)
     end
 
     if input == "y" then
-      shell.execute("wget -f " .. repo .. file)
+      shell.execute("wget -f " .. repo .. file .. " -O " .. file)
     end
   else
-    shell.execute("wget -f " .. repo .. file)
+    shell.execute("wget -f " .. repo .. file .. " -O " .. file)
   end
+end
+
+shell.execute("wget -f " .. repo .. "launcher.lua" .. " -O " .. "/bin/orms.lua")
+
+print("Add to startup? (Y - Yes/N - No)")
+::AddToStartup::
+local input = string.lower(io.read())
+if input ~= "n" and input ~= "y" then
+  print("Invalid choice (Y/N)")
+  goto AddToStartup
+end
+if input == "y" then
+    io.open("/home/.shrc", "a"):write("orms.lua\n"):close()
 end
 
 print("Install Complete")

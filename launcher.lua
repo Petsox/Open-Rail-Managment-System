@@ -1,0 +1,1 @@
+os.execute("cd /home/orms && init.lua")

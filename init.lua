@@ -1,4 +1,3 @@
--- Imports
 local GUI = require("grapes.GUI")
 local term = require("term")
 local config = require("config")
@@ -6,19 +5,16 @@ local utils = require("utils")
 local text = require("text")
 local controllers = require("controllers")
 local thread = require("thread")
+local screen = require("grapes.Screen")
 
--- Global tables
 local SwitchTexts = {}
 local SignalTexts = {}
 local settingsWindow = nil
 
--- Create workspace
 local workspace = GUI.workspace()
 
--- Draw background
 workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, 0x000000))
 
--- Draw title
 workspace:addChild(GUI.label(1, 1, workspace.width, workspace.height, 0xFFFFFF, "Open Rail Management System"):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP))
 workspace:addChild(GUI.label(1, 1, workspace.width, workspace.height, 0xFFFFFF, "By Petsox and tpeterka1"):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_BOTTOM))
 
@@ -27,6 +23,7 @@ local exitBtn = workspace:addChild(GUI.label(155, 50, 6, 1, 0xFFFFFF, "[Exit]"))
 exitBtn.eventHandler = function(workspace, object, event)
     if event == "touch" then
         utils.resetLayout()
+        screen.flush()
         term.clear()
         os.exit()
     end
@@ -149,11 +146,6 @@ local function startPN(signal, signalTbl)
 end
 
 local function setSignalStateGUI(signal, state, signalTbl)
-    -- stuj: 0xFF0000
-    -- vystraha: 0xFFFF00
-    -- volno: 0x008000
-    -- posunZak: 0x0000FF
-    -- posunDov: 0xFFFFFF
     signal.colors.default.text = 0xB2B2B2
     signal.colors.pressed.text = 0xB2B2B2
     ::signal::
@@ -203,15 +195,18 @@ for _, signal in pairs(config.Signals) do
 
             -- We then add all the possible states to the menu
             for i, state in pairs(controllers.Signals.getValidStatesForSignal(signal[3])) do
+                if state == "Stuj" and string.sub(signal[3], 1, 2) == "Se" then goto continue end
                 local signalMenuState = signalMenu:addChild(GUI.button(5, i+1, 20, 1, 0x555555, 0x000000, 0x19ED15, 0x000000, state))
                 signalMenuState.switchMode = true
                 signalMenuState.animated = false
                 -- PN state is highlited red (for safety reasons)
                 if state == "PN" then signalMenuState.colors.default.text = 0xFC0303 end
                 -- We highlight the current state that the signal is in
-                if controllers.Signals.getState(signal[3]) == state then
+                local currentState = controllers.Signals.getState(signal[3])
+                if currentState == state then
                     signalMenuState.pressed = true
                 end
+                if currentState == "Stuj" and state == "PosunZak" then signalMenuState.pressed = true end
                 signalMenuState.onTouch = function()
                     -- When a state is clicked, we check if the signal is a normal signal or an expect signal
                     if not (string.sub(signal[3], 1, 2) == "Pr") then
@@ -234,6 +229,7 @@ for _, signal in pairs(config.Signals) do
                         GUI.alert("Předvěsti jsou ovládány automaticky / Expect signals are controlled automatically")
                     end
                 end
+                ::continue::
             end
             workspace:draw()
         end
@@ -250,11 +246,12 @@ end
 
 -- Import labels
 for _, label in pairs(config.Labels) do
-    workspace:addChild(GUI.button(label[1] - (string.len(label[3]) / 2), label[2], string.len(label[3]) + 2, 1, 0x0000FF, 0xFFFFFF, 0x0000FF, 0xFFFFFF, label[3]))
+    workspace:addChild(GUI.button(math.ceil(label[1] - (string.len(label[3]) / 2)), label[2], string.len(label[3]) + 2, 1, 0x0000FF, 0xFFFFFF, 0x0000FF, 0xFFFFFF, label[3]))
 end
 
 -- Reset layout
 utils.resetLayout()
 
+screen.flush()
 workspace:draw()
 workspace:start()

@@ -1,7 +1,7 @@
 local shell = require("shell")
 local fs = require("filesystem")
-local repo = "https://raw.githubusercontent.com/Petsox/Open-Rail-Management-System/dev/"
-local repoFiles = { "orms.lua", "SaS.lua", "gui.lua", "ormsLib.lua", "updater.lua", "S_1xSingle.lua", "S_2xDualHead.lua", "S_2xDualHead1xSingle.lua", "S_Shunt.lua", "S_Expect.lua", "S_1xDualHead1xSingle.lua" }
+local repo = "https://raw.githubusercontent.com/Petsox/Open-Rail-Management-System/new-master/"
+local repoFiles = { "init.lua", "json.lua", "controllers.lua", "updater.lua", "utils.lua", "grapes/Color.lua", "grapes/Event.lua", "grapes/Filesystem.lua", "grapes/GUI.lua", "grapes/Image.lua", "grapes/Keyboard.lua", "grapes/Number.lua", "grapes/Paths.lua", "grapes/Screen.lua", "grapes/Text.lua" }
 local installLoc = "/home/orms/"
 
 shell.setWorkingDirectory(installLoc)
@@ -23,7 +23,7 @@ for file, _ in fs.list(installLoc) do
 end
 
 for _, file in pairs(repoFiles) do
-  shell.execute("wget -f " .. repo .. file)
+  shell.execute("wget -f " .. repo .. file .. " -O " .. file)
 end
 
 print("Update Complete, rebooting")
