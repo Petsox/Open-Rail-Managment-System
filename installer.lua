@@ -10,10 +10,6 @@ end
 
 shell.setWorkingDirectory(installLoc)
 
-if not fs.isDirectory(installLoc .. "grapes") then
-  fs.makeDirectory(installLoc .. "grapes")
-end
-
 for file, _ in fs.list(installLoc) do
   print("Install location contains files within, wipe all? (Y - Yes/N - No)")
   ::WipeInstDir::
@@ -29,6 +25,10 @@ for file, _ in fs.list(installLoc) do
     end
   end
   break
+end
+
+if not fs.isDirectory(installLoc .. "grapes") then
+  fs.makeDirectory(installLoc .. "grapes")
 end
 
 local OverwriteAll = false
