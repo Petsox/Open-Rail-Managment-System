@@ -35,6 +35,10 @@ When you have all the mods installed, make a computer with an <b>internet card, 
 Then, install OpenOS using the OpenOS floppy and run the following command, which will automatically install ORMS into <i>/home/orms</i>:
 
 	wget -f https://raw.githubusercontent.com/Petsox/Open-Rail-Management-System/new-master/installer.lua /tmp/installer.lua && /tmp/installer.lua
+
+ Alternatively, if the Github installer doesn't work (you are getting a certificate error), you may try the alternative Pastebin installer, which will also install ORMS into <i>/home/orms</i>:
+
+ 	pastebin run -f iQAC8EfE
 </br>
 
 Make two digital controllers (one named "Crossings" and one named "Switches") and a digital controller from SignalCraft, named "Signals", connect them to the computer with a cable from the top
