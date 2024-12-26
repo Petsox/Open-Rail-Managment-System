@@ -1,21 +1,21 @@
 local shell = require("shell")
 local fs = require("filesystem")
-local repoFiles = { 
-	"init.lua" = "Bq7r7ax1", 
-	"json.lua" = "S1xp1yvg", 
-	"config.lua" = "MCQNRBnh", 
-	"controllers.lua" = "Pu7xWjGb",
-	"utils.lua" = "pHwREF5r", 
-	"grapes/Color.lua" = "gqNHhdEQ", 
-	"grapes/Event.lua" = "yTNKPyDX", 
-	"grapes/Filesystem.lua" = "KnKzuAeK", 
-	"grapes/GUI.lua" = "PMkQCUVc", 
-	"grapes/Image.lua" = "njzs2te0", 
-	"grapes/Keyboard.lua" = "jy6YNds6", 
-	"grapes/Number.lua" = "dYHbSf9i", 
-	"grapes/Paths.lua" = "9w5zsW1A", 
-	"grapes/Screen.lua" = "vnhPgFNE", 
-	"grapes/Text.lua" = "wTyBUqw7", 
+local repoFiles = {
+	{file = "init.lua",                 link = "Bq7r7ax1"},
+	{file = "json.lua",                 link = "S1xp1yvg"},
+	{file = "config.lua",               link = "MCQNRBnh"},
+	{file = "controllers.lua",          link = "Pu7xWjGb"},
+	{file = "utils.lua",                link = "pHwREF5r"},
+	{file = "grapes/Color.lua",         link = "gqNHhdEQ"},
+	{file = "grapes/Event.lua",         link = "yTNKPyDX"},
+	{file = "grapes/Filesystem.lua",    link = "KnKzuAeK"},
+	{file = "grapes/GUI.lua",           link = "PMkQCUVc"},
+	{file = "grapes/Image.lua",         link = "njzs2te0"},
+	{file = "grapes/Keyboard.lua",      link = "jy6YNds6"},
+	{file = "grapes/Number.lua",        link = "dYHbSf9i"},
+	{file = "grapes/Paths.lua",         link = "9w5zsW1A"},
+	{file = "grapes/Screen.lua",        link = "vnhPgFNE"},
+	{file = "grapes/Text.lua",          link = "wTyBUqw7"},
 }
 local launcherId = "n9bSKZ96"
 local installLoc = "/home/orms/"
@@ -48,9 +48,9 @@ if not fs.isDirectory(installLoc .. "grapes") then
 end
 
 local OverwriteAll = false
-for file, id in pairs(repoFiles) do
-  if fs.exists(installLoc .. file) and not OverwriteAll then
-    print("File " .. file .. " already exists. Overwrite? (Y - Yes/N - No/A - All)")
+for _, data in pairs(repoFiles) do
+  if fs.exists(installLoc .. data.file) and not OverwriteAll then
+    print("File " .. data.file .. " already exists. Overwrite? (Y - Yes/N - No/A - All)")
     ::OverwriteFile::
     local input = string.lower(io.read())
     if input ~= "n" and input ~= "y" and input ~= "a" then
@@ -60,14 +60,14 @@ for file, id in pairs(repoFiles) do
 
     if input == "a" then
       OverwriteAll = true
-      shell.execute("pastebin get -f " .. id .. " " .. file)
+      shell.execute("pastebin get -f " .. data.link .. " " .. data.file)
     end
 
     if input == "y" then
-      shell.execute("pastebin get -f " .. id .. " " .. file)
+      shell.execute("pastebin get -f " .. data.link .. " " .. data.file)
     end
   else
-    shell.execute("pastebin get -f " .. id .. " " .. file)
+    shell.execute("pastebin get -f " .. data.link .. " " .. data.file)
   end
 end
 
